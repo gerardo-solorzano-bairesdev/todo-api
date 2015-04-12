@@ -1,21 +1,11 @@
+# coding=utf-8
 from flask import Flask, jsonify, abort, make_response, request
+import json
 
 app = Flask(__name__)
 
-todos = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    }
-]
+with open('fixtures.json') as todos_file:
+    todos = json.load(todos_file)
 
 @app.errorhandler(404)
 def not_found(error):
@@ -23,7 +13,7 @@ def not_found(error):
 
 @app.route('/')
 def index():
-    return "Hej, varlden!"
+    return "Hej, världen!"
 
 @app.route('/api/todos/', methods=['GET'])
 def list_todos():
