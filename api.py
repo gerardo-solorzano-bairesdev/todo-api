@@ -52,11 +52,11 @@ def update_todo(id):
         abort(404)
     if not request.json:
         abort(400)
-    if 'title' in request.json and type(request.json['title']) != unicode:
+    if 'title' in request.json and type(request.json['title']) != str:
         abort(400)
-    if 'description' in request.json and type(request.json['description']) is not unicode:
+    if 'description' in request.json and type(request.json['description']) != str:
         abort(400)
-    if 'done' in request.json and type(request.json['done']) is not bool:
+    if 'done' in request.json and type(request.json['done']) != bool:
         abort(400)
 
     todo[0]['title'] = request.json.get('title', todo[0]['title'])
