@@ -3,6 +3,7 @@ import unittest
 import api
 import json
 
+
 class APITestCase(unittest.TestCase):
     def setUp(self):
         self.app = api.app.test_client()
@@ -13,15 +14,15 @@ class APITestCase(unittest.TestCase):
 
     def test_default_todos(self):
         rv = self.app.get('/api/todos/')
-        todos_file = open('fixtures.json')
-        expected_todos = json.load(todos_file)
+        with open('fixtures.json') as todos_file:
+            expected_todos = json.load(todos_file)
         api_todos = json.loads(rv.data)['todos']
         assert expected_todos == api_todos
 
     def test_get_todo(self):
         rv = self.app.get('/api/todos/1')
-        todos_file = open('fixtures.json')
-        expected_todo = json.load(todos_file)[0]
+        with open('fixtures.json') as todos_file:
+            expected_todo = json.load(todos_file)[0]
         api_todo = json.loads(rv.data)
         assert expected_todo == api_todo
 
@@ -37,14 +38,15 @@ class APITestCase(unittest.TestCase):
     def test_put_todo(self):
         data = {'title': 'Test2'}
         rv = self.app.put('/api/todos/3',
-                           data=json.dumps(data),
-                           content_type='application/json')
+                          data=json.dumps(data),
+                          content_type='application/json')
         api_todo = json.loads(rv.data)
         assert 'Test2' == api_todo['title']
 
     def test_remove_todo(self):
         rv = self.app.delete('/api/todos/3')
         assert 'OK' == rv.data
+
 
 if __name__ == '__main__':
     unittest.main()
