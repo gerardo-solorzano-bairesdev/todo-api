@@ -1,6 +1,7 @@
 # coding=utf-8
 from flask import Flask, jsonify, abort, make_response, request
 import json
+import os
 
 app = Flask(__name__)
 
@@ -72,4 +73,5 @@ def delete_todo(id):
     return "OK"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, port=port)
