@@ -1,0 +1,11 @@
+coverage==3.7.1
+Flask==0.10.1
+Flask-Login==0.2.11
+Flask-OpenID==1.2.4
+flipflop==1.0
+guess-language==0.2
+itsdangerous==0.24
+Jinja2==2.7.3
+MarkupSafe==0.23
+python-openid==2.2.5
+Werkzeug==0.10.4
