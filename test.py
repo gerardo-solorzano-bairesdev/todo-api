@@ -40,7 +40,8 @@ class APITestCase(unittest.TestCase):
         rv = self.app.put('/api/todos/3',
                           data=json.dumps(data),
                           content_type='application/json')
-        api_todo = json.loads(rv.data.decode('utf8'))
+        print rv.data
+        api_todo = json.loads(rv.data)
         assert 'Test2' == api_todo['title']
 
     def test_remove_todo(self):
