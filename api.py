@@ -14,7 +14,7 @@ def not_found(error):
 
 @app.route('/')
 def index():
-    return "Hej, världen!"
+    return u"Hej, världen!"
 
 @app.route('/api/todos/', methods=['GET'])
 def list_todos():

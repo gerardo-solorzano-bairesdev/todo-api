@@ -10,7 +10,7 @@ class APITestCase(unittest.TestCase):
 
     def test_hello_world(self):
         rv = self.app.get('/')
-        assert "Hej, världen!" in rv.data.decode('utf8')
+        assert u"Hej, världen!" in rv.data.decode('utf8')
 
     def test_default_todos(self):
         rv = self.app.get('/api/todos/')
@@ -45,7 +45,7 @@ class APITestCase(unittest.TestCase):
 
     def test_remove_todo(self):
         rv = self.app.delete('/api/todos/3')
-        assert 'OK' == rv.data.decode('utf8')
+        assert u'OK' == rv.data.decode('utf8')
 
 
 if __name__ == '__main__':
