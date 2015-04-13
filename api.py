@@ -1,9 +1,11 @@
 # coding=utf-8
 from flask import Flask, jsonify, abort, make_response, request
+from flask.ext.cors import CORS
 import json
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 with open('fixtures.json') as todos_file:
     todos = json.load(todos_file)
