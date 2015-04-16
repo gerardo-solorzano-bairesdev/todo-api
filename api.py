@@ -27,8 +27,10 @@ def create_todo():
     if not request.json or not 'title' in request.json:
         abort(400)
 
+    maxId = max([t['id'] for t in todos])
+
     todo = {
-        'id': todos[-1]['id'] + 1,
+        'id': maxId + 1,
         'title': request.json['title'],
         'description': request.json.get('description', ""),
         'done': False

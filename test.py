@@ -34,6 +34,7 @@ class APITestCase(unittest.TestCase):
                            content_type='application/json')
         api_todo = json.loads(rv.data.decode('utf8'))
         assert 'Test' == api_todo['title']
+        assert 4 == api_todo['id']
 
     def test_put_todo(self):
         data = {'title': 'Test2'}

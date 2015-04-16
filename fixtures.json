@@ -6,6 +6,12 @@
     "title": "Buy groceries"
   },
   {
+    "description": "",
+    "done": false,
+    "id": 3,
+    "title": "Improve Coding Challenge"
+  },
+  {
     "description": "Need to find a good Python tutorial on the web",
     "done": false,
     "id": 2,
