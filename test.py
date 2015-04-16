@@ -44,6 +44,48 @@ class APITestCase(unittest.TestCase):
         api_todo = json.loads(rv.data.decode('utf8'))
         assert 'Test2' == api_todo['title']
 
+    def test_put_todo_index(self):
+        # Check the current order of ids
+        rv = self.app.get('/api/todos/')
+        api_todos = json.loads(rv.data.decode('utf8'))['todos']
+        api_ids = [t['id'] for t in api_todos]
+        expected_ids = [1,3,2,4]
+        assert api_ids == expected_ids
+
+        # Move from current index to index 1
+        data = {'$index': 1}
+        rv = self.app.put('/api/todos/4',
+                          data=json.dumps(data),
+                          content_type='application/json')
+        api_todo = json.loads(rv.data.decode('utf8'))
+        # We got the right todo back
+        assert 4 == api_todo['id']
+        assert 200 == rv.status_code
+
+        # Check the new order of ids
+        rv = self.app.get('/api/todos/')
+        api_todos = json.loads(rv.data.decode('utf8'))['todos']
+        api_ids = [t['id'] for t in api_todos]
+        expected_ids = [1,4,3,2]
+        assert api_ids == expected_ids
+
+    def test_put_todo_index_invalid(self):
+        # Move from current index to index -1
+        data = {'$index': -1}
+        rv = self.app.put('/api/todos/4',
+                          data=json.dumps(data),
+                          content_type='application/json')
+        # We got the right status code
+        assert 400 == rv.status_code
+
+        # Move from current index to index larger than list
+        data = {'$index': 4}
+        rv = self.app.put('/api/todos/4',
+                          data=json.dumps(data),
+                          content_type='application/json')
+        # We got the right status code
+        assert 400 == rv.status_code
+
     def test_remove_todo(self):
         rv = self.app.delete('/api/todos/3')
         assert u'OK' == rv.data.decode('utf8')

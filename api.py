@@ -59,9 +59,22 @@ def update_todo(id):
         abort(400)
     if 'done' in request.json and type(request.json['done']) != bool:
         abort(400)
+    if '$index' in request.json:
+        newIndex = request.json.get('$index')
+
+        if not(isinstance(request.json['$index'], int)):
+            abort(400)
+        if newIndex < 0:
+            abort(400)
+        if newIndex >= len(todos):
+            abort(400)
+
+        oldIndex = todos.index(todo[0])
+        todos.insert(newIndex, todos.pop(oldIndex))
 
     todo[0]['title'] = request.json.get('title', todo[0]['title'])
     todo[0]['done'] = request.json.get('done', todo[0]['done'])
+
     return jsonify(todo[0])
 
 @app.route('/api/todos/<int:id>', methods=['DELETE'])
