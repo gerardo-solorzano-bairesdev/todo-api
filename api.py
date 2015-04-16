@@ -32,7 +32,6 @@ def create_todo():
     todo = {
         'id': maxId + 1,
         'title': request.json['title'],
-        'description': request.json.get('description', ""),
         'done': False
     }
     todos.append(todo)
@@ -58,13 +57,10 @@ def update_todo(id):
         abort(400)
     if 'title' in request.json and type(request.json['title']) != str:
         abort(400)
-    if 'description' in request.json and type(request.json['description']) != str:
-        abort(400)
     if 'done' in request.json and type(request.json['done']) != bool:
         abort(400)
 
     todo[0]['title'] = request.json.get('title', todo[0]['title'])
-    todo[0]['description'] = request.json.get('description', todo[0]['description'])
     todo[0]['done'] = request.json.get('done', todo[0]['done'])
     return jsonify(todo[0])
 
