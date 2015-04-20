@@ -90,6 +90,26 @@ class APITestCase(unittest.TestCase):
         rv = self.app.delete('/api/todos/3')
         assert u'OK' == rv.data.decode('utf8')
 
+    def test_remove_todos_and_add(self):
+        # Remove remaining
+        rv = self.app.delete('/api/todos/1')
+        assert u'OK' == rv.data.decode('utf8')
+        rv = self.app.delete('/api/todos/2')
+        assert u'OK' == rv.data.decode('utf8')
+        rv = self.app.delete('/api/todos/4')
+        assert u'OK' == rv.data.decode('utf8')
+
+        # Create new one
+        # Id should reset to 1
+        data = {'title': 'Test'}
+        rv = self.app.post('/api/todos/',
+                           data=json.dumps(data),
+                           content_type='application/json')
+        api_todo = json.loads(rv.data.decode('utf8'))
+        assert 'Test' == api_todo['title']
+        assert 1 == api_todo['id']
+
+
 
 if __name__ == '__main__':
     unittest.main()
