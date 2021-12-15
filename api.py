@@ -1,14 +1,16 @@
 # coding=utf-8
 from flask import Flask, jsonify, abort, make_response, request
-from flask.ext.cors import CORS
+from flask_cors import CORS
 import json
 import os
 
+BODY = 'body'
 app = Flask(__name__)
 CORS(app)
 
-with open('fixtures.json') as todos_file:
-    todos = json.load(todos_file)
+#with open('data.json') as todos_file:
+#    todos = json.load(todos_file)
+todos = []
 
 @app.errorhandler(404)
 def not_found(error):
@@ -16,27 +18,29 @@ def not_found(error):
 
 @app.route('/')
 def index():
-    return u"Hej, världen!"
+    return u"ToDo API ready!!!"
 
 @app.route('/api/todos/', methods=['GET'])
 def list_todos():
-    return jsonify({'todos': todos})
+    response = jsonify({'todos': todos})
+    #response.headers.add("Access-Control-Allow-Origin", "*")
+    return response 
 
 @app.route('/api/todos/', methods=['POST'])
 def create_todo():
-    if not request.json or not 'title' in request.json:
+    if not request.json or not BODY in request.json:
         abort(400)
 
-    maxId = max([t['id'] for t in todos]) if len(todos) > 0 else 0
-
+    maxId = max([int(t['id']) for t in todos]) if len(todos) > 0 else 0
     todo = {
-        'id': maxId + 1,
-        'title': request.json['title'],
+        'id': str(maxId + 1),
+        BODY: request.json[BODY],
         'done': False
     }
     todos.append(todo)
-
-    return jsonify(todo), 201
+    response = jsonify(todo)
+    #response.headers.add("Access-Control-Allow-Origin", "*")
+    return response, 201
 
 @app.route('/api/todos/<int:id>', methods=['GET'])
 def read_todo(id):
@@ -49,13 +53,14 @@ def read_todo(id):
 
 @app.route('/api/todos/<int:id>', methods=['PUT'])
 def update_todo(id):
-    todo = [t for t in todos if t['id'] == id]
+    print(id, todos)
+    todo = [t for t in todos if t['id'] == str(id)]
 
     if len(todo) == 0:
         abort(404)
     if not request.json:
         abort(400)
-    if 'title' in request.json and type(request.json['title']) != str:
+    if BODY in request.json and type(request.json[BODY]) != str:
         abort(400)
     if 'done' in request.json and type(request.json['done']) != bool:
         abort(400)
@@ -72,7 +77,7 @@ def update_todo(id):
         oldIndex = todos.index(todo[0])
         todos.insert(newIndex, todos.pop(oldIndex))
 
-    todo[0]['title'] = request.json.get('title', todo[0]['title'])
+    todo[0][BODY] = request.json.get(BODY, todo[0][BODY])
     todo[0]['done'] = request.json.get('done', todo[0]['done'])
 
     return jsonify(todo[0])
